@@ -26,12 +26,20 @@ def on_message(client, userdata, msg):
 
     try:
         data = yaml.load(msg.payload, Loader=yaml.FullLoader)
-        sensor, measurement = data['instrument'].split('/')
+        if data.get('instrument', False):
+            sensor, measurement = data['instrument'].split('/')
+        else:
+            type, interface, sensor, measurement = data['sensor'].split('/')
 
         if sensor in instruments.keys():
             var = instruments[sensor].get(measurement, False)
 
-        sensor_id = data['device'].split('/')[1]
+        # two-part device identifier
+        if len(data['device'].split('/')) ==  2:
+             _, sensor_id = data['device'].split('/')
+        else: # three-part identifier
+             mfg, chipset, sensor_id = data['device'].split('/')
+
         parameters = 'sensor_id={}&{}={}&email={}&api_key={}&test'.format(
             sensor_id, var, data['m'], email, api_key
         )
