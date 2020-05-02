@@ -23,6 +23,10 @@ def on_message(client, userdata, msg):
     instruments = cfg['chords']['instruments']
     email = cfg['chords']['email']
     api_key = cfg['chords']['api_key']
+    if cfg['chords']['is_test_data']:
+        is_test = "test"
+    else:
+        is_test = ""
 
     try:
         data = yaml.load(msg.payload, Loader=yaml.FullLoader)
@@ -40,8 +44,8 @@ def on_message(client, userdata, msg):
         else: # three-part identifier
              mfg, chipset, sensor_id = data['device'].split('/')
 
-        parameters = 'sensor_id={}&{}={}&email={}&api_key={}&test'.format(
-            sensor_id, var, data['m'], email, api_key
+        parameters = 'sensor_id={}&{}={}&email={}&api_key={}&{}'.format(
+            sensor_id, var, data['m'], email, api_key, is_test
         )
 
         r = requests.get(
