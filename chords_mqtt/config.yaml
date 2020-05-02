@@ -6,6 +6,7 @@ chords:
   base_api_endpoint: ''
   api_key: ''
   email: ''
+  is_test_data: true
   
   instruments:
     bme680:
@@ -34,3 +35,7 @@ chords:
 
     veml6070:
       uv: 'uv1'
+
+    halleffect:
+      precipitation: 'precip'
+
